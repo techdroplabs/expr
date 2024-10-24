@@ -2,16 +2,16 @@ package expr
 
 import (
 	"fmt"
-	"github.com/techdroplabs/expr/ast"
-	"github.com/techdroplabs/expr/file"
+	"github.com/antonmedv/expr/ast"
+	"github.com/antonmedv/expr/file"
 	"reflect"
 
-	"github.com/techdroplabs/expr/checker"
-	"github.com/techdroplabs/expr/compiler"
-	"github.com/techdroplabs/expr/conf"
-	"github.com/techdroplabs/expr/optimizer"
-	"github.com/techdroplabs/expr/parser"
-	"github.com/techdroplabs/expr/vm"
+	"github.com/antonmedv/expr/checker"
+	"github.com/antonmedv/expr/compiler"
+	"github.com/antonmedv/expr/conf"
+	"github.com/antonmedv/expr/optimizer"
+	"github.com/antonmedv/expr/parser"
+	"github.com/antonmedv/expr/vm"
 )
 
 // Option for configuring config.

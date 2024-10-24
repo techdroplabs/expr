@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/techdroplabs/expr/ast"
-	"github.com/techdroplabs/expr/conf"
-	"github.com/techdroplabs/expr/file"
-	"github.com/techdroplabs/expr/parser"
+	"github.com/antonmedv/expr/ast"
+	"github.com/antonmedv/expr/conf"
+	"github.com/antonmedv/expr/file"
+	"github.com/antonmedv/expr/parser"
 )
 
 var errorType = reflect.TypeOf((*error)(nil)).Elem()

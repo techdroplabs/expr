@@ -5,10 +5,10 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/techdroplabs/expr/compiler"
-	"github.com/techdroplabs/expr/conf"
-	"github.com/techdroplabs/expr/parser"
-	"github.com/techdroplabs/expr/vm"
+	"github.com/antonmedv/expr/compiler"
+	"github.com/antonmedv/expr/conf"
+	"github.com/antonmedv/expr/parser"
+	"github.com/antonmedv/expr/vm"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

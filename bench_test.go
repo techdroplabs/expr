@@ -3,8 +3,8 @@ package expr_test
 import (
 	"testing"
 
-	"github.com/techdroplabs/expr"
-	"github.com/techdroplabs/expr/vm"
+	"github.com/antonmedv/expr"
+	"github.com/antonmedv/expr/vm"
 )
 
 func Benchmark_expr(b *testing.B) {

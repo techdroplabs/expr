@@ -3,7 +3,7 @@ package checker
 import (
 	"reflect"
 
-	"github.com/techdroplabs/expr/ast"
+	"github.com/antonmedv/expr/ast"
 )
 
 var (

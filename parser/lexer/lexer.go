@@ -5,7 +5,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/techdroplabs/expr/file"
+	"github.com/antonmedv/expr/file"
 )
 
 func Lex(source *file.Source) ([]Token, error) {

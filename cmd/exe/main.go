@@ -4,16 +4,16 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
-	"github.com/techdroplabs/expr/ast"
+	"github.com/antonmedv/expr/ast"
 	"io/ioutil"
 	"os"
 
-	"github.com/techdroplabs/expr"
-	"github.com/techdroplabs/expr/checker"
-	"github.com/techdroplabs/expr/compiler"
-	"github.com/techdroplabs/expr/optimizer"
-	"github.com/techdroplabs/expr/parser"
-	"github.com/techdroplabs/expr/vm"
+	"github.com/antonmedv/expr"
+	"github.com/antonmedv/expr/checker"
+	"github.com/antonmedv/expr/compiler"
+	"github.com/antonmedv/expr/optimizer"
+	"github.com/antonmedv/expr/parser"
+	"github.com/antonmedv/expr/vm"
 	"github.com/sanity-io/litter"
 )
 

@@ -8,8 +8,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/techdroplabs/expr/file"
-	. "github.com/techdroplabs/expr/parser/lexer"
+	"github.com/antonmedv/expr/file"
+	. "github.com/antonmedv/expr/parser/lexer"
 )
 
 type lexTest struct {

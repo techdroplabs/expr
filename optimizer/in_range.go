@@ -1,7 +1,7 @@
 package optimizer
 
 import (
-	. "github.com/techdroplabs/expr/ast"
+	. "github.com/antonmedv/expr/ast"
 )
 
 type inRange struct{}

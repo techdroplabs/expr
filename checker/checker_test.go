@@ -8,11 +8,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/techdroplabs/expr"
-	"github.com/techdroplabs/expr/ast"
-	"github.com/techdroplabs/expr/checker"
-	"github.com/techdroplabs/expr/conf"
-	"github.com/techdroplabs/expr/parser"
+	"github.com/antonmedv/expr"
+	"github.com/antonmedv/expr/ast"
+	"github.com/antonmedv/expr/checker"
+	"github.com/antonmedv/expr/conf"
+	"github.com/antonmedv/expr/parser"
 	"github.com/stretchr/testify/assert"
 )
 
