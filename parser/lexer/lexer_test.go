@@ -19,7 +19,7 @@ type lexTest struct {
 
 var lexTests = []lexTest{
 	{
-		".5 0.025 1 02 1e3 0xFF 1.2e-4 1_000_000 _42 -.5",
+		".5 0.025 1 02 1e3 0xFF 1.2e-4 1_000_000 _42 @PersonID -.5",
 		[]Token{
 			{Kind: Number, Value: ".5"},
 			{Kind: Number, Value: "0.025"},
@@ -30,6 +30,7 @@ var lexTests = []lexTest{
 			{Kind: Number, Value: "1.2e-4"},
 			{Kind: Number, Value: "1_000_000"},
 			{Kind: Identifier, Value: "_42"},
+			{Kind: Identifier, Value: "@PersonID"},
 			{Kind: Operator, Value: "-"},
 			{Kind: Number, Value: ".5"},
 			{Kind: EOF},
