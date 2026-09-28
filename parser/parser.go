@@ -73,11 +73,12 @@ var builtins = map[string]builtin{
 }
 
 type parser struct {
-	tokens  []Token
-	current Token
-	pos     int
-	err     *file.Error
-	depth   int // closure call depth
+	tokens    []Token
+	current   Token
+	pos       int
+	err       *file.Error
+	depth     int  // closure call depth
+	separator bool // a colon delimits a ternary branch or slice bound here
 }
 
 type Tree struct {
@@ -214,7 +215,7 @@ func (p *parser) parsePrimary() Node {
 
 	if token.Is(Bracket, "(") {
 		p.next()
-		expr := p.parseExpression(0)
+		expr := p.parseSubexpression(false)
 		p.expect(Bracket, ")") // "an opened parenthesis is not properly closed"
 		return p.parsePostfixExpression(expr)
 	}
@@ -243,7 +244,7 @@ func (p *parser) parseConditionalExpression(node Node) Node {
 		p.next()
 
 		if !p.current.Is(Operator, ":") {
-			expr1 = p.parseExpression(0)
+			expr1 = p.parseSubexpression(true)
 			p.expect(Operator, ":")
 			expr2 = p.parseExpression(0)
 		} else {
@@ -268,6 +269,16 @@ func (p *parser) parsePrimaryExpression() Node {
 	switch token.Kind {
 
 	case Identifier:
+		if !p.separator && token.Value != "true" && token.Value != "false" && token.Value != "nil" && alphabeticPrefix(token.Value) && p.pos+2 < len(p.tokens) {
+			colon, name := p.tokens[p.pos+1], p.tokens[p.pos+2]
+			if colon.Is(Operator, ":") && name.Is(Identifier) &&
+				colon.Line == token.Line && colon.Column == token.Column+len(token.Value) &&
+				name.Line == colon.Line && name.Column == colon.Column+1 {
+				token.Value += ":" + name.Value
+				p.next()
+				p.next()
+			}
+		}
 		p.next()
 		switch token.Value {
 		case "true":
@@ -334,6 +345,23 @@ func (p *parser) parsePrimaryExpression() Node {
 	return p.parsePostfixExpression(node)
 }
 
+func alphabeticPrefix(name string) bool {
+	for _, ch := range name {
+		if (ch < 'A' || ch > 'Z') && (ch < 'a' || ch > 'z') {
+			return false
+		}
+	}
+	return len(name) > 0
+}
+
+func (p *parser) parseSubexpression(colonSeparator bool) Node {
+	outer := p.separator
+	p.separator = colonSeparator
+	node := p.parseExpression(0)
+	p.separator = outer
+	return node
+}
+
 func (p *parser) parseIdentifierExpression(token, next Token) Node {
 	var node Node
 	if p.current.Is(Bracket, "(") {
@@ -344,10 +372,10 @@ func (p *parser) parseIdentifierExpression(token, next Token) Node {
 			// TODO: Add builtins signatures.
 			if b.arity == 1 {
 				arguments = make([]Node, 1)
-				arguments[0] = p.parseExpression(0)
+				arguments[0] = p.parseSubexpression(false)
 			} else if b.arity == 2 {
 				arguments = make([]Node, 2)
-				arguments[0] = p.parseExpression(0)
+				arguments[0] = p.parseSubexpression(false)
 				p.expect(Operator, ",")
 				arguments[1] = p.parseClosure()
 			}
@@ -382,7 +410,7 @@ func (p *parser) parseClosure() Node {
 	p.expect(Bracket, "{")
 
 	p.depth++
-	node := p.parseExpression(0)
+	node := p.parseSubexpression(false)
 	p.depth--
 
 	p.expect(Bracket, "}")
@@ -404,7 +432,7 @@ func (p *parser) parseArrayExpression(token Token) Node {
 				goto end
 			}
 		}
-		node := p.parseExpression(0)
+		node := p.parseSubexpression(false)
 		nodes = append(nodes, node)
 	}
 end:
@@ -448,7 +476,7 @@ func (p *parser) parseMapExpression(token Token) Node {
 
 		p.expect(Operator, ":")
 
-		node := p.parseExpression(0)
+		node := p.parseSubexpression(false)
 		pair := &PairNode{Key: key, Value: node}
 		pair.SetLocation(token.Location)
 		nodes = append(nodes, pair)
@@ -507,7 +535,7 @@ func (p *parser) parsePostfixExpression(node Node) Node {
 				p.next()
 
 				if !p.current.Is(Bracket, "]") { // slice without from and to [:]
-					to = p.parseExpression(0)
+					to = p.parseSubexpression(false)
 				}
 
 				node = &SliceNode{
@@ -519,13 +547,13 @@ func (p *parser) parsePostfixExpression(node Node) Node {
 
 			} else {
 
-				from = p.parseExpression(0)
+				from = p.parseSubexpression(true)
 
 				if p.current.Is(Operator, ":") {
 					p.next()
 
 					if !p.current.Is(Bracket, "]") { // slice without to [1:]
-						to = p.parseExpression(0)
+						to = p.parseSubexpression(false)
 					}
 
 					node = &SliceNode{
@@ -579,7 +607,7 @@ func (p *parser) parseArguments() []Node {
 		if len(nodes) > 0 {
 			p.expect(Operator, ",")
 		}
-		node := p.parseExpression(0)
+		node := p.parseSubexpression(false)
 		nodes = append(nodes, node)
 	}
 	p.expect(Bracket, ")")
